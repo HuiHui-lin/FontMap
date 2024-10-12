@@ -8,7 +8,11 @@ from tqdm import tqdm
 
 
 class HuiFontMap:
-    def __init__(self,fontpath,savepath,issaveimg=True):
+    """
+       HuiFontMap 类用于初始化读取字体文件并获取字体映射，同时支持将字形保存为图片。
+       默认是保存图片之后进行识别，方便肉眼对比，不建议生成图片就立即识别，不保存图片数据
+    """
+    def __init__(self,fontpath:str,savepath:str,issaveimg:bool=True):
        """
        初始化读取字体和获取字体文件映射
        :param fontpath: 字体文件路径
@@ -20,7 +24,7 @@ class HuiFontMap:
        self.cmap = self.font.getBestCmap()
        if issaveimg:
         self.__saveFontImg(cmap=self.cmap,savepath=savepath)
-    def __saveFontImg(self,cmap,savepath):
+    def __saveFontImg(self,cmap:dict,savepath:str):
         """
         根据字体文件生成对应字形图像并保存
         :param cmap:字符映射字典
@@ -40,13 +44,13 @@ class HuiFontMap:
             resizeimg = fontimg.resize(proportional_size, Image.Resampling.LANCZOS)
             old_size = resizeimg.size
             new_size = (200,200)
-            red_background = Image.new("RGBA", (200,200), 'red') #红色背景
-            red_background.paste(resizeimg, (int((new_size[0] - old_size[0]) / 2),
+            white_background = Image.new("RGBA", (200,200), 'white') #白色背景
+            white_background.paste(resizeimg, (int((new_size[0] - old_size[0]) / 2),
                                   int((new_size[1] - old_size[1]) / 2)),resizeimg.split()[1])
-            red_background.save(os.path.join(savepath ,cmap[i] + '.png'))
+            white_background.save(os.path.join(savepath ,cmap[i] + '.png'))
 
         # print('字形图片保存完毕')
-    def ocrFontImg(self,jsonpath = None):
+    def ocrFontImg(self,jsonpath:str = None):
         """
         :param jsonpath: ocr字典结果的保存路径，默认不保存
         :return: 返回一个ocr识别字典结果
@@ -80,14 +84,14 @@ class HuiFontMap:
                 json.dump(dis,fp=f,ensure_ascii=False)
             # print('文件已保存')
         return dis
-    def __get_proportional_size(self,original_width, original_height):
+    def __get_proportional_size(self,original_width:int, original_height:int):
         """
         notes:此对象的私有方法，用于计算字体等比例宽高
         :param original_width: 原始字形宽
         :param original_height: 原始字形高
         :return : 返回计算后的宽度和高度
         """
-        max_size = 200
+        max_size = 100
         aspect_ratio = original_width / original_height
         if original_width > original_height:
             new_width = max_size
@@ -99,6 +103,7 @@ class HuiFontMap:
 
 
 if __name__ == '__main__':
-    hui = HuiFontMap(fontpath=r"C:\Users\21761\Desktop\file.woff",savepath=r"C:\Users\21761\Desktop\新建文件夹",issaveimg=False)
+    # 测试
+    hui = HuiFontMap(fontpath=r"C:\Users\21761\Desktop\dc027189e0ba4cd.woff2",savepath=r"C:\Users\21761\Desktop\新建文件夹",issaveimg=False)
     diststr = hui.ocrFontImg()
 

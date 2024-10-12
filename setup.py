@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='FontMap', #模块名
-    version='1.1.6', #版本号
+    version='1.1.7', #版本号
     description='A tool library for generating mapping dictionaries based on font files',#介绍
     long_description=open('README.MD', 'r', encoding='utf-8').read(),#包的详细描述，这里是从README.md文件中读取的内容。
     long_description_content_type='text/markdown',#指定long_description的文本格式，这里是Markdown格式
